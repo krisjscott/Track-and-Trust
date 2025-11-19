@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>Document Verification</h2>
+<h3>Pending Document Verifications</h3>
+
+{% if documents and documents|length > 0 %}
+<table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse:collapse;">
+    <tr>
+        <th>Document</th>
+        <th>Uploaded By</th>
+        <th>Status</th>
+        <th>AI Verification</th>
+        <th>Extracted Text</th>
+        <th>Actions</th>
+    </tr>
+
+    {% for doc in documents %}
+    <tr>
+        <td>{{ doc.filename }}</td>
+        <td>{{ doc.owner_username if doc.owner_username else 'N/A' }}</td>
+        <td>{{ doc.status }}</td>
+
+        <td>
+            {% if doc.ai_verification %}
+                {% if doc.ai_verification == "Valid Document" %}
+                    ✅ Valid
+                {% elif doc.ai_verification == "Suspicious Document" %}
+                    ⚠️ Suspicious
+                {% else %}
+                    ❌ Invalid / Incomplete
+                {% endif %}
+            {% else %}
+                Pending
+            {% endif %}
+        </td>
+
+        <td style="max-width:300px; overflow:auto; white-space:pre-wrap;">
+            {{ doc.ocr_text if doc.ocr_text else 'N/A' }}
+        </td>
+
+        <td>
+            {% if doc.status == "Pending" %}
+                <form action="/update_status" method="POST" style="display:inline;">
+                    <input type="hidden" name="filename" value="{{ doc.filename }}">
+                    <input type="hidden" name="action" value="approve">
+                    <button type="submit">✅ Approve</button>
+                </form>
+
+                <form action="/update_status" method="POST" style="display:inline; margin-left:6px;">
+                    <input type="hidden" name="filename" value="{{ doc.filename }}">
+                    <input type="hidden" name="action" value="reject">
+                    <button type="submit">❌ Reject</button>
+                </form>
+            {% else %}
+                —
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% else %}
+<p>No documents to verify.</p>
+{% endif %}
+
+<a href="/dashboard">← Back to Dashboard</a>
+
+{% endblock %}
+

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f7f7f7; }
+        .container {
+            max-width: 420px; margin: auto; padding: 20px;
+            border: 1px solid #ccc; border-radius: 8px; background: white;
+        }
+        h2 { text-align: center; }
+        input, select { width: 100%; padding: 10px; margin: 8px 0; }
+        button { width: 100%; padding: 10px; background: #2c3e50; color: white; border: none; cursor: pointer; }
+        button:hover { background: #1a242f; }
+        .error { color: red; text-align: center; }
+        a { text-decoration: none; color: #2c3e50; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📝 Create Account</h2>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <form action="/register" method="POST">
+
+        <label>Username</label>
+        <input type="text" name="username" required>
+
+        <label>Email</label>
+        <input type="email" name="email" required>
+
+        <label>Password</label>
+        <input type="password" name="password" required>
+
+        <label>Role</label>
+        <select name="role" required>
+            <option value="customer">Customer</option>
+            <option value="saler">Saler</option>
+            <option value="driver">Driver</option>
+            <option value="government">Government</option>
+        </select>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <p style="text-align:center; margin-top:10px;">
+        Already have an account? <a href="/login">Login here</a>
+    </p>
+</div>
+
+</body>
+</html>
+

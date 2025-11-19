@@ -1,0 +1,14 @@
+<div class="card mb-3 p-3">
+  <h5>All Documents (Government View)</h5>
+  {% if documents %}
+    <ul class="list-group list-group-flush">
+      {% for d in documents %}
+        <li class="list-group-item">
+          Owner: {{ d.owner_username or 'Unknown' }} | {{ d.filename }} | Status: {{ d.status }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No documents available.</p>
+  {% endif %}
+</div>

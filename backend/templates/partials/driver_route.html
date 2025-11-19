@@ -1,0 +1,10 @@
+<div class="card mb-3 p-3">
+  <h5>Assigned Route</h5>
+  {% if route %}
+    <p>Route Info: {{ route.route_info }}</p>
+    <p>Status: {{ route.status }}</p>
+    <p>Assigned on: {{ route.assigned_on }}</p>
+  {% else %}
+    <p>No route assigned yet.</p>
+  {% endif %}
+</div>

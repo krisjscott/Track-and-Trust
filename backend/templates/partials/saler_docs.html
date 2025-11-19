@@ -1,0 +1,22 @@
+<div class="card mb-3 p-3">
+  <h5>Customer Documents & Products</h5>
+  {% if customer_docs %}
+    {% for c_name, c_data in customer_docs.items() %}
+      <div class="mb-2">
+        <strong>{{ c_name }} ({{ c_data.email }})</strong>
+        {% if c_data.documents %}
+          <ul class="list-group list-group-flush">
+            {% for d in c_data.documents %}
+              <li class="list-group-item">{{ d.filename }} - Status: {{ d.status }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>No documents</p>
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No customer data.</p>
+  {% endif %}
+</div>
+

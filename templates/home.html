@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Track & Trust - Home</title>
+</head>
+<body>
+    <h1>Welcome to Track & Trust</h1>
+    <p>Live Sensor Dashboard:</p>
+    <div id="sensor-data"></div>
+
+    <script>
+        async function fetchSensorData() {
+            const res = await fetch("/sensor-data");
+            const data = await res.json();
+            document.getElementById("sensor-data").innerText = JSON.stringify(data, null, 2);
+        }
+        setInterval(fetchSensorData, 2000);
+        fetchSensorData();
+    </script>
+</body>
+</html>

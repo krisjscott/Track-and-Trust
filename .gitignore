@@ -1,0 +1,37 @@
+# Python cache folders
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+env/
+
+# Databases (avoid uploading sensitive data)
+*.db
+*.sqlite3
+
+# JSON files containing user or document data
+documents.json
+users.json
+
+# Environment variables (API keys, secrets)
+.env
+
+# Logs
+*.log
+
+# MacOS system files
+.DS_Store
+
+# Flask session files
+instance/
+
+# Node/JS build files (if any)
+node_modules/
+
+# Backup files
+*.bak
+*.temp
+*.tmp

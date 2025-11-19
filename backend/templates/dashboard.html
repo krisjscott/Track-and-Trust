@@ -1,0 +1,269 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #f8fafc;
+        color: #1e293b;
+        margin: 0;
+        padding: 0;
+    }
+
+    h2, h3, h4 { color: #1e293b; }
+
+    /* Navbar Styling */
+    .navbar {
+        background: linear-gradient(90deg, #1e293b, #334155);
+        padding: 15px 25px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        margin-bottom: 25px;
+    }
+
+    .navbar a {
+        color: #f8fafc;
+        margin-right: 20px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+    .navbar a:hover {
+        color: #38bdf8;
+    }
+
+    /* Sensor Cards */
+    .card-container {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-top: 15px;
+    }
+
+    .card {
+        background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        width: 260px;
+        transition: transform 0.2s ease;
+    }
+    .card:hover { transform: translateY(-3px); }
+    .card h4 { color: #0f172a; margin-bottom: 10px; }
+
+    /* Alerts */
+    ul { list-style-type: none; padding-left: 0; }
+    li { font-weight: 500; }
+
+    /* Tables */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        background: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    th, td {
+        border-bottom: 1px solid #e2e8f0;
+        padding: 10px 12px;
+        text-align: center;
+    }
+    th {
+        background: #1e293b;
+        color: #f8fafc;
+        font-weight: 600;
+    }
+    tr:hover { background: #f1f5f9; }
+
+    /* AI Bars */
+    .ai-bar {
+        width: 100%;
+        height: 12px;
+        background: #e2e8f0;
+        border-radius: 6px;
+        overflow: hidden;
+        position: relative;
+    }
+    .ai-bar-fill {
+        height: 100%;
+        transition: width 0.5s ease;
+    }
+    .ai-low { background: linear-gradient(90deg, #16a34a, #22c55e); }
+    .ai-medium { background: linear-gradient(90deg, #eab308, #facc15); }
+    .ai-high { background: linear-gradient(90deg, #dc2626, #ef4444); }
+
+    /* Links in table */
+    table a {
+        color: #2563eb;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    table a:hover { text-decoration: underline; }
+
+    /* Page Headings */
+    h2 {
+        font-size: 1.8em;
+        margin-bottom: 10px;
+    }
+    h3 {
+        margin-top: 30px;
+        font-size: 1.3em;
+        border-left: 4px solid #0ea5e9;
+        padding-left: 10px;
+    }
+</style>
+
+<div class="navbar">
+    <a href="/dashboard">Dashboard</a>
+    <a href="/upload">Upload Document</a>
+    <a href="/notifications">Notifications</a>
+    {% if role == 'saler' or role == 'government' %}
+        <a href="/verify">Verify Docs</a>
+        <a href="/assign_route">Assign Route</a>
+    {% endif %}
+    {% if role == 'driver' %}
+        <a href="#">My Route</a>
+    {% endif %}
+</div>
+
+<h2>Welcome, {{ username }} ({{ role }})</h2>
+
+<h3>Live Sensor Status</h3>
+<div class="card-container">
+    <div class="card"><h4>🌡 Temperature</h4><p>{{ sensor_data.temperature }}°C</p></div>
+    <div class="card"><h4>💧 Humidity</h4><p>{{ sensor_data.humidity }}%</p></div>
+    <div class="card"><h4>🚭 Smoke</h4><p>{{ sensor_data.smoke }}</p></div>
+</div>
+
+{% if alerts %}
+<h4>Alerts:</h4>
+<ul>
+{% for a in alerts %}
+    <li style="color:red;">⚠️ {{ a }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% if role == 'customer' %}
+<h3>Your Documents</h3>
+<table>
+    <tr>
+        <th>Filename</th>
+        <th>Status</th>
+        <th>AI Verification</th>
+        <th>Risk</th>
+        <th>AI</th>
+        <th>Uploaded</th>
+        <th>Download</th>
+    </tr>
+    {% for d in documents %}
+    <tr>
+        <td>{{ d.filename }}</td>
+        <td>{{ d.status }}</td>
+        <td>{{ d.ai_verification }}</td>
+        <td>{{ d.risk_score }}</td>
+        <td>
+            <div class="ai-bar">
+                <div class="ai-bar-fill
+                    {% if d.risk_score < 40 %}ai-low
+                    {% elif d.risk_score < 70 %}ai-medium
+                    {% else %}ai-high
+                    {% endif %}"
+                style="width:{{ d.risk_score }}%">
+                </div>
+            </div>
+        </td>
+        <td>{{ d.uploaded_on }}</td>
+        <td><a href="/download/{{ d.id }}">Download</a></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+{% if role == 'saler' %}
+<h3>Customer Documents</h3>
+{% for cust, info in customer_docs.items() %}
+<h4>{{ cust }} ({{ info.email }})</h4>
+<table>
+    <tr>
+        <th>File</th>
+        <th>Status</th>
+        <th>AI Verification</th>
+        <th>Risk</th>
+        <th>AI</th>
+    </tr>
+    {% for d in info.documents %}
+    <tr>
+        <td>{{ d.filename }}</td>
+        <td>{{ d.status }}</td>
+        <td>{{ d.ai_verification }}</td>
+        <td>{{ d.risk_score }}</td>
+        <td>
+            <div class="ai-bar">
+                <div class="ai-bar-fill
+                    {% if d.risk_score < 40 %}ai-low
+                    {% elif d.risk_score < 70 %}ai-medium
+                    {% else %}ai-high
+                    {% endif %}"
+                style="width:{{ d.risk_score }}%">
+                </div>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endfor %}
+{% endif %}
+
+{% if role == 'government' %}
+<h3>All Documents</h3>
+<table>
+    <tr>
+        <th>Owner</th>
+        <th>File</th>
+        <th>Status</th>
+        <th>AI Verification</th>
+        <th>Risk</th>
+        <th>AI</th>
+    </tr>
+    {% for d in documents %}
+    <tr>
+        <td>{{ d.owner_username }}</td>
+        <td>{{ d.filename }}</td>
+        <td>{{ d.status }}</td>
+        <td>{{ d.ai_verification }}</td>
+        <td>{{ d.risk_score }}</td>
+        <td>
+            <div class="ai-bar">
+                <div class="ai-bar-fill
+                    {% if d.risk_score < 40 %}ai-low
+                    {% elif d.risk_score < 70 %}ai-medium
+                    {% else %}ai-high
+                    {% endif %}"
+                style="width:{{ d.risk_score }}%">
+                </div>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+{% if role == 'driver' %}
+<h3>Your Delivery Route</h3>
+{% if route %}
+    <pre>{{ route.route_info }}</pre>
+{% else %}
+    <p>No route assigned yet.</p>
+{% endif %}
+{% endif %}
+
+{% endblock %}
+

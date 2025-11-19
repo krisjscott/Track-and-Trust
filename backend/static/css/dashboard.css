@@ -1,0 +1,65 @@
+/* static/css/dashboard.css */
+
+body {
+  background: #f4f6fb;
+  font-family: 'Poppins', sans-serif;
+}
+
+.card {
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  background: #fff;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.status-approved { color: #28a745; font-weight: 600; }
+.status-rejected { color: #dc3545; font-weight: 600; }
+.status-pending  { color: #ff9800; font-weight: 600; }
+
+.alert-toast {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  z-index: 2000;
+  min-width: 260px;
+  border-radius: 12px;
+  animation: fadeSlide 0.4s ease;
+}
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.gradient-header {
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  color: white;
+  padding: 15px 20px;
+  border-radius: 15px 15px 0 0;
+  font-weight: 600;
+}
+
+.chart-container {
+  position: relative;
+  height: 280px;
+  width: 100%;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #2575fc, #6a11cb);
+  transform: scale(1.03);
+}

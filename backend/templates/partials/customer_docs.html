@@ -1,0 +1,15 @@
+<div class="card mb-3 p-3">
+  <h5>Your Documents</h5>
+  {% if documents %}
+    <ul class="list-group list-group-flush">
+      {% for d in documents %}
+        <li class="list-group-item">
+          {{ d.filename }} - Status: {{ d.status }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No documents uploaded yet.</p>
+  {% endif %}
+</div>
+
